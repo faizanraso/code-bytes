@@ -1,0 +1,68 @@
+body{
+  background-color: #161a20;
+  color: #EEEEEE;
+  font-family: monospace;
+}
+
+/* HOME PAGE CSS */
+
+.header-text{
+  font-size: 4rem;
+  text-align: center;
+  margin-top: 30vh;
+  color: #00ADB5;
+  font-family: 'Overpass', monospace;
+}
+
+.description-text{
+  margin-top: 4.5vh;
+  margin-left: 25%;
+  text-align: center;
+  width:50%;
+}
+
+.home-page-button{
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.start-button{
+  color: #EEEEEE !important;
+  border-color: #00ADB5 !important;
+}
+
+.start-button:hover {
+  background: #00ADB5 !important;
+ }
+
+
+/* LANGUAGE SELECTION PAGE CSS */
+.language-selection-header{
+  padding: 40px;
+  color: #00ADB5;
+  text-align: center;
+}
+
+.language-buttons-div{
+  width: 70vw;
+  height: 70vh;
+  margin-left: 15vw;
+}
+
+.language-button{
+  color: #EEEEEE !important;
+  border-color: #00ADB5 !important;
+  width: 20vw;
+  height: 10vh;
+  margin-left: 2.5vw;
+  margin-top: 6vh;
+}
+
+.language-button:hover {
+  background: #00ADB5 !important;
+ }
+
+
+/* EDITOR PAGE CSS */
+
