@@ -1,51 +1,35 @@
 import React, {useEffect, useState} from "react";
 import Editor from "@monaco-editor/react";
 import { Navigate, useParams } from "react-router-dom";
-import {io} from 'socket.io-client';
 import EditorLanguage from "./EditorLanguage";
+const { io } = require("socket.io-client");
 
 function CodeEditor(){
 
-    const language = useParams().languageSelected;
     const id = useParams().id;
-    var editorLanguage = "";
-    var goBack  = false;
-
-    [editorLanguage, goBack] = EditorLanguage(language);
-
-    const [socket, setSocket] = useState();
+    const language = useParams().languageSelected;
     const [code, updateCode] = useState();
+    const [editorLanguage, goBack] = EditorLanguage(language);
+    var socket;
 
     useEffect(()=>{
-        setSocket(io('http://localhost:3001'));
-        return () => {
-            socket.disconnect();
-        }
-    }, []);
-    
-    useEffect(() => {
-        if (socket == null || code == null) return
-        socket.emit('get-document', id);
-    }, [socket, code, id]);
-
-    useEffect(()=> {
-        if (socket == null || code == null) return;
-        socket.emit('send-changes', code) 
-    }, [socket, code]);
-
-    useEffect(()=>{
-        
-        if (socket == null || code == null) return
-        socket.on('receive-changes', code => {
-            updateCode(code);
+        socket = io('http://localhost:3001');
+        socket.on("connect", () => {
+            socket.emit("room", id);
         });
 
-        return () => { socket.off('receive-changes');}
+        return()=>{
+            socket.disconnect();
+        }
+    },[]);
 
-    }, [socket,code]);
+    useEffect(() => {
+        socket.emit('send-changes', code);
+    }, [code]);
+
 
     return(
-        <div className="ceditor-page-div">
+        <div className="editor-page-div">
             {goBack && <Navigate to="/language-selection" />}
             <div className="editor-div">  
                 <Editor
@@ -53,7 +37,7 @@ function CodeEditor(){
                     width="100vw"
                     theme="vs-dark"
                     defaultLanguage={editorLanguage}
-                    onChange={(event)=>updateCode(event)}
+                    onChange={(e) => updateCode(e)}
                     value={code}
                 />
             </div>
