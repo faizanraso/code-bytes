@@ -6,7 +6,6 @@ const http = require("http");
 const PORT = process.env.PORT || 3001
 
 const app = express()
-app.use(require('cors')())
 const server = http.createServer(app)
 
 //mongoose
@@ -16,7 +15,7 @@ mongoose.connect(uri,{ useNewUrlParser: true, useUnifiedTopology: true });
 
 var codeRoom = "";
 
-const io = socketIo(server,{ 
+const io = socketIo(server, { 
     cors: {
       origin: 'http://localhost:3000',
       methods: ["GET", "POST"]
@@ -31,9 +30,7 @@ io.on('connection',(socket)=>{
         socket.on('send-changes', (newCode)=>{
             io.to(codeRoom).emit('receive-changes', newCode);
         });
-
-    });
-
+    }); 
 });
 
 server.listen(PORT, err=> {
