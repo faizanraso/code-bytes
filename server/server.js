@@ -1,10 +1,12 @@
 require('dotenv').config()
 const express = require("express");
+const cors = require('cors');
 const socketIo = require("socket.io");
 const http = require("http");
 const PORT = process.env.PORT || 3001
 
 const app = express()
+app.use(require('cors')())
 const server = http.createServer(app)
 
 //mongoose
@@ -16,20 +18,22 @@ var codeRoom = "";
 
 const io = socketIo(server,{ 
     cors: {
-      origin: 'http://localhost:3000'
+      origin: 'http://localhost:3000',
+      methods: ["GET", "POST"]
     } 
 });
 
 io.on('connection',(socket)=>{
-    socket.on('join', (room)=>{
+    socket.on('join', async room =>{
         codeRoom = room
         socket.join(codeRoom);
+
+        socket.on('send-changes', (newCode)=>{
+            io.to(codeRoom).emit('receive-changes', newCode);
+        });
+
     });
 
-    socket.on('send-changes', (code)=>{
-        console.log(code);
-    });
-    
 });
 
 server.listen(PORT, err=> {

@@ -10,27 +10,37 @@ function CodeEditor(){
     const language = useParams().languageSelected;
     const [code, updateCode] = useState();
     const [editorLanguage, goBack] = EditorLanguage(language);
-    var socket;
+    const [socket, setSocket] = useState(io('127.0.0.1:3001'));
 
+    //setup socket.io on client side
     useEffect(()=>{
-        socket = io('http://localhost:3001');
         socket.on("connect", () => {
-            socket.emit("room", id);
+            socket.emit("join", id);
         });
+        return()=> {socket.disconnect()}
+    }, [socket]);
 
-        return()=>{
-            socket.disconnect();
-        }
-    },[]);
-
+    //send changes to server
     useEffect(() => {
+        if (socket == null || code == null) return
         socket.emit('send-changes', code);
-    }, [code]);
+    }, [code, socket]);
 
+    //receive changes from server
+    useEffect(() => {
+        if (socket == null || code == null) return
+
+        const handler = newCode => {
+            updateCode(newCode);
+        };
+        socket.on('receive-changes', handler);
+        return() => {socket.off('receive-changes', handler)}
+
+    }, [code, socket]);
 
     return(
         <div className="editor-page-div">
-            {goBack && <Navigate to="/language-selection" />}
+        {goBack && <Navigate to="/language-selection" />}
             <div className="editor-div">  
                 <Editor
                     height="100vh"
