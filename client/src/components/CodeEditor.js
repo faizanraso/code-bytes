@@ -17,6 +17,9 @@ function CodeEditor(){
         socket.on("connect", () => {
             socket.emit("join", id);
         });
+        socket.on("initial-code", data =>{
+            updateCode(data);
+        });
         return()=> {socket.disconnect()}
     }, [socket]);
 
@@ -37,6 +40,13 @@ function CodeEditor(){
         return() => {socket.off('receive-changes', handler)}
 
     }, [code, socket]);
+
+
+    useEffect(()=>{
+        if (socket == null || code == null) return
+        socket.emit('save-changes', code);
+    }, [code, socket]);
+
 
     return(
         <div className="editor-page-div">
