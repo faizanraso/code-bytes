@@ -11,16 +11,15 @@ In the client directory of the project, you can run:
 
 ### `npm install`
 
-to install all required dependencies
+to install all required dependencies and then:
+
+### `npm start`
 
 
 In the server directory of the project, you can run:
 
 ### `npm install`
 
-to install all required dependencies and then:
-
-### `npm start`
 
 to run the client side.
 
